@@ -1,0 +1,187 @@
+<div style="text-align:center">
+  <h1>Welcome to {{ title }} Page!</h1>
+</div>
+<div>
+
+  <table class="table">
+    <caption style="text-align:center; font-size:25px; color:blue"> Master Schedule Extraction Table</caption>
+    <tr>
+      <td>
+        <div>
+          <label for="model">Model</label>
+          <select class="form-control" [(ngModel)]="model" id="model" required (change)="clear()">
+            <option *ngFor="let vehicle of vehicles | unique" [ngValue]="vehicle.model">
+              {{ vehicle.model }}
+            </option>
+          </select>
+        </div>
+      </td>
+      <td>
+        <div>
+          <label for="startDate">Firm Start Date</label>
+          <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate" required (change)="clear()" />
+        </div>
+      </td>
+      <td>
+        <div>
+          <label for="endDate">Firm End Date</label>
+          <input type="date" id="endDate" class="form-control" [(ngModel)]="endDate" required (change)="clear()" />
+        </div>
+      </td>
+      <td style="padding-left:2%;padding-top:2%">
+        <button type="button" class="btn btn-info" (click)="onExec()">Execute</button>
+      </td>
+      <td style="padding-left:2%;padding-top:2%">
+        <button type="button" class="btn btn-primary">Update</button>
+      </td>
+      <td style="padding-left:2%;padding-top:2%">
+        <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="7">
+        <button type="button" class="btn" (click)="onExport()">Export</button>
+      </td>
+    </tr>
+    <tr><td colspan="7" style="color:red">{{err_msg}}</td></tr>
+    <tr *ngIf="isExport||isExec">
+      <td colspan="7">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
+                <div class="form-group">
+                  <label for="Exclude">Exclude</label>
+                  <input type="text" class="form-control" id="Exclude" [(ngModel)]="exclude">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Order Number">Order Number</label>
+                  <input type="text" class="form-control" id="Order Number" [(ngModel)]="orderNo">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Sequence">Sequence</label>
+                  <input type="text" class="form-control" id="Sequence">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="MsDate">MsDate</label>
+                  <input type="text" class="form-control" id="MsDate">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Prefix">Prefix</label>
+                  <input type="text" class="form-control" id="Prefix" [(ngModel)]="eimPrefix">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Model">Model</label>
+                  <input type="text" class="form-control" id="Model">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Suffix">Suffix</label>
+                  <input type="text" class="form-control" id="Suffix" [(ngModel)]="eimSuffix">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Dest">Dest</label>
+                  <input type="text" class="form-control" id="Dest" [(ngModel)]="dest">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="SpecRef">SpecRef</label>
+                  <input type="text" class="form-control" id="SpecRef" [(ngModel)]="specRef">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="ExtrClr">ExtrClr</label>
+                  <input type="text" class="form-control" id="ExtrClr" [(ngModel)]="extrClr">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="IntrClr">IntrClr</label>
+                  <input type="text" class="form-control" id="IntrClr" [(ngModel)]="intrClr">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="OrderSource">OrderSource</label>
+                  <input type="text" class="form-control" id="OrderSource" [(ngModel)]="orderSource">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="GlblDest">GlblDest</label>
+                  <input type="text" class="form-control" id="GlblDest" [(ngModel)]="glblDest">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="DealerNbr">DealerNbr</label>
+                  <input type="text" class="form-control" id="DealerNbr" [(ngModel)]="dealerNbr">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="Buyer">Buyer</label>
+                  <input type="text" class="form-control" id="Buyer" [(ngModel)]="buyer">
+                </div>
+              </th>
+              <th>
+                <div class="form-group">
+                  <label for="OrderClass">OrderClass</label>
+                  <input type="text" class="form-control" id="OrderClass" [(ngModel)]="orderClass">
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let vehicle of vehicles | filter:model:startDate:endDate:exclude:orderNo:sequence:msDate:eimPrefix:eimSuffix:dest:specRef:extrClr:intrClr:orderSource:glblDest:dealerNbr:buyer:orderClass">
+              <tr>
+                <td>{{vehicle.exclude}}</td>
+                <td>{{vehicle.orderNo}}</td>
+                <td>{{vehicle.sequence}}</td>
+                <td style="width:100px">{{vehicle.msDate}}</td>
+                <td>{{vehicle.eimPrefix}}</td>
+                <td>{{vehicle.model}}</td>
+                <td style="width:100px">{{vehicle.eimSuffix}}</td>
+                <td>{{vehicle.dest}}</td>
+                <td>{{vehicle.specRef}}</td>
+                <td>{{vehicle.extrClr}}</td>
+                <td>{{vehicle.intrClr}}</td>
+                <td>{{vehicle.orderSource}}</td>
+                <td>{{vehicle.glblDest}}</td>
+                <td>{{vehicle.dealerNbr}}</td>
+                <td>{{vehicle.buyer}}</td>
+                <td>{{vehicle.orderClass}}</td>
+              </tr>
+              <tr *ngIf="!vehicles">
+                  <td colspan="16">
+                    Loading data. Please wait...
+                  </td>
+                </tr>
+                <tr *ngIf="vehicles && vehicles.length==0">
+                  <td colspan="16">
+                    No employee records to display
+                  </td>
+                </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</div>
